@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.briancaldera.hazel.MainActivity
 import com.briancaldera.hazel.R
 import com.briancaldera.hazel.viewmodel.SignInViewModel
 import com.firebase.ui.auth.AuthUI
@@ -21,7 +22,7 @@ class SignInActivity: AppCompatActivity() {
     }
     private val viewModel: SignInViewModel by viewModels ()
 
-    private val signIn: ActivityResultLauncher<Intent> =
+    private val signInLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(FirebaseAuthUIActivityResultContract()) {
             onSignInResult(it)
         }
@@ -29,22 +30,26 @@ class SignInActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (viewModel.getCurrentUser() == null) {
+
             val signInIntent = AuthUI.getInstance()
+                .apply { useEmulator("192.168.1.106", 9099) }
                 .createSignInIntentBuilder()
                 .setLogo(R.mipmap.ic_launcher)
                 .setAvailableProviders(listOf(
                     AuthUI.IdpConfig.EmailBuilder().build(),
-                    AuthUI.IdpConfig.GoogleBuilder().build(),
+                    AuthUI.IdpConfig.GoogleBuilder().build()
                 ))
                 .build()
-            signIn.launch(signInIntent)
+
+            signInLauncher.launch(signInIntent)
         }
     }
 
     override fun onStart() {
         super.onStart()
         if (viewModel.getCurrentUser() != null) {
-            goToMainActivity()
+            Toast.makeText(this, "The user is still signed in", Toast.LENGTH_SHORT).show()
+//            goToMainActivity()
         }
     }
 
@@ -68,6 +73,7 @@ class SignInActivity: AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
-        finish()
+        val intent = Intent(this, MainActivity::class.java)
+        this.startActivity(intent)
     }
 }
