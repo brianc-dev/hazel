@@ -1,6 +1,7 @@
 package com.briancaldera.hazel.repo
 
 import android.util.Log
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.BuildConfig
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -14,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class HazelRepository @Inject constructor(private val auth: FirebaseAuth) {
+open class HazelRepository @Inject constructor() {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -32,13 +33,10 @@ open class HazelRepository @Inject constructor(private val auth: FirebaseAuth) {
 //            Firebase.storage.useEmulator("10.0.2.2", 9199)
         }
     }
-    fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
-    fun signOutCurrentUser() {
-            auth.signOut()
-    }
+    //noinspection RestrictedApi
+    fun getCurrentUser(): FirebaseUser? = AuthUI.getInstance().auth.currentUser
 
-    private fun onIdTokenListener() {
-
-    }
+    //noinspection RestrictedApi
+    fun signOutCurrentUser() = AuthUI.getInstance().signOut(AuthUI.getApplicationContext().applicationContext)
 }

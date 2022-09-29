@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Hazel</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="dialog_signout_title">Sign out?</string>
+    <string name="dialog_signout_text">You won\'t be able to sync data from this device. Would you like to sign out?</string>
+    <string name="dialog_signout_positive_button">Sign out</string>
+    <string name="dialog_signout_negative_button">Cancel</string>
+    <string name="dialog_signout_progress_bar_tittle">Signing out…</string>
+    <string name="snackbar_error_signout">An error occurred while trying to sign out: %1$s</string>
 </resources>

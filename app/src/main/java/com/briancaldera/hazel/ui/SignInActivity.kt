@@ -27,9 +27,11 @@ class SignInActivity: AppCompatActivity() {
             onSignInResult(it)
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (viewModel.getCurrentUser() == null) {
+    override fun onStart() {
+        super.onStart()
+        if (viewModel.getCurrentUser() != null) {
+            goToHomeActivity()
+        } else {
 
             val signInIntent = AuthUI.getInstance()
                 .apply { useEmulator("192.168.1.106", 9099) }
@@ -45,24 +47,14 @@ class SignInActivity: AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (viewModel.getCurrentUser() != null) {
-            Toast.makeText(this, "The user is still signed in", Toast.LENGTH_SHORT).show()
-//            goToMainActivity()
-        }
-    }
-
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
             Log.d(TAG, "Sign in successful!")
-            goToMainActivity()
         } else {
             Toast.makeText(
                 this,
                 "There was an error signing in",
                 Toast.LENGTH_LONG).show()
-
             val response = result.idpResponse
             if (response == null) {
                 Log.w(TAG, "Sign in canceled")
@@ -72,8 +64,8 @@ class SignInActivity: AppCompatActivity() {
         }
     }
 
-    private fun goToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+    private fun goToHomeActivity() {
+        val intent = Intent(this, HomeActivity::class.java)
         this.startActivity(intent)
     }
 }
